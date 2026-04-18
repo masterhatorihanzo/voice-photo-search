@@ -1,0 +1,52 @@
+# Extended OpenAI Conversation — Tool Definitions
+# Add these to your Extended OpenAI Conversation integration configuration
+# in Home Assistant under: Settings → Integrations → Extended OpenAI Conversation → Configure → Functions
+
+# ─────────────────────────────────────────────
+# Tool 1: Search photos and display on picture frames
+# ─────────────────────────────────────────────
+- spec:
+    name: search_photos_for_frames
+    description: >
+      Search for photos and display them on the digital picture frames.
+      ALWAYS call this immediately when the user asks to show, find, or display photos.
+      The API automatically detects person names and dates from the query.
+      Known people: <LIST_YOUR_KNOWN_PEOPLE_HERE>.
+      Examples: "sunset", "beach", "photos of Alice", "Alice at the park",
+      "photos from yesterday", "Grandma last month", "birthday cake".
+    parameters:
+      type: object
+      properties:
+        query:
+          type: string
+          description: >
+            What photos to search for. Can be visual scenes, person names,
+            dates, or any combination. Examples: "sunset", "Alice",
+            "photos of Bob from April 16", "birthday party last year".
+      required:
+        - query
+  function:
+    type: rest
+    resource: "http://<SEARCH_HOST>:8008/api/search"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+    payload: >-
+      {"query":"{{query}}"}
+
+
+- spec:
+    name: restore_picture_frames
+    description: >
+      Restore the picture frames to normal random photo rotation.
+      Use when the user says "stop showing those photos", "clear the frames",
+      "go back to normal photos", or "reset the frames".
+    parameters:
+      type: object
+      properties: {}
+  function:
+    type: rest
+    resource: "http://<SEARCH_HOST>:8008/api/restore"
+    method: POST
+    headers:
+      Content-Type: "application/json"

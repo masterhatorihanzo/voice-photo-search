@@ -1,0 +1,14 @@
+name: voice-photo-search
+
+services:
+  voice-photo-search:
+    build: .
+    container_name: voice_photo_search
+    restart: unless-stopped
+    ports:
+      - "8008:8008"
+    env_file:
+      - .env
+    environment:
+      MAX_RESULTS: "20"
+      TZ: "America/Los_Angeles"
